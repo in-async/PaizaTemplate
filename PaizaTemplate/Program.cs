@@ -7,9 +7,12 @@ using System.Linq;
 
 namespace PaizaTemplate {
 
-    public class UnitOfWork : UowBase {
+    public class UnitOfWork {
 
-        public static UnitOfWork Load(TextReader reader) {
+        public void Load(TextReader reader) {
+            if (reader == null) throw new ArgumentNullException("reader");
+            Contract.EndContractBlock();
+
             //var h = reader.ReadInt32Enumerable(ReadingDirection.Horizontal, reader.ReadInt32());
             //var v = reader.ReadInt32Enumerable(ReadingDirection.Vertial, reader.ReadInt32());
             //var xy = reader.ReadInt32Enumerable(ReadingDirection.Horizontal, 2).ToArray();
@@ -18,7 +21,9 @@ namespace PaizaTemplate {
             throw new NotImplementedException();
         }
 
-        public override string Execute() {
+        public string Execute() {
+            Contract.Ensures(Contract.Result<string>() != null);
+
             throw new NotImplementedException();
         }
     }
@@ -28,15 +33,11 @@ namespace PaizaTemplate {
     public static class Program {
 
         public static void Main() {
-            var uow = UnitOfWork.Load(Console.In);
+            var uow = new UnitOfWork();
+            uow.Load(Console.In);
             var result = uow.Execute();
             Console.WriteLine(result);
         }
-    }
-
-    public abstract class UowBase {
-
-        public abstract string Execute();
     }
 
     public enum ReadingDirection {
@@ -54,28 +55,21 @@ namespace PaizaTemplate {
         /// <param name="count"></param>
         /// <returns></returns>
         public static IEnumerable<int> ReadInt32Enumerable(this TextReader reader, ReadingDirection direction, int count) {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (reader == null) throw new ArgumentNullException("reader");
             Contract.Ensures(Contract.Result<IEnumerable<int>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<int>>().Count() == Contract.OldValue(count));
 
-            IEnumerable<int> result;
             switch (direction) {
                 case ReadingDirection.Horizontal:
                     var line = reader.ReadLine();
                     if (line == null) throw new InvalidOperationException();
-                    result = line.SplitBySpace(count).ToInt32Enumerable();
-                    break;
+                    return line.SplitBySpace(count).ToInt32Enumerable();
 
                 case ReadingDirection.Vertial:
-                    result = reader.ReadLines(count).ToInt32Enumerable();
-                    break;
+                    return reader.ReadLines(count).ToInt32Enumerable();
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+                    throw new ArgumentOutOfRangeException("direction", direction, null);
             }
-
-            Contract.Assume(result.Count() == count);
-            return result;
         }
 
         /// <summary>
@@ -87,13 +81,10 @@ namespace PaizaTemplate {
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures")]
         public static IEnumerable<IEnumerable<int>> ReadInt32Matrix(this TextReader reader, int horizontalCount, int verticalCount) {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (reader == null) throw new ArgumentNullException("reader");
             Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<int>>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<IEnumerable<int>>>().All(s => s != null));
 
-            var result = reader.ReadLines(verticalCount).Select(l => l.SplitBySpace(horizontalCount).ToInt32Enumerable());
-            Contract.Assume(result.All(s => s != null));
-            return result;
+            return reader.ReadLines(verticalCount).Select(l => l.SplitBySpace(horizontalCount).ToInt32Enumerable());
         }
 
         /// <summary>
@@ -103,19 +94,7 @@ namespace PaizaTemplate {
         /// <param name="count"></param>
         /// <returns></returns>
         public static IEnumerable<string> ReadLines(this TextReader reader, int count) {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
-            Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<string>>().All(s => s != null));
-            Contract.Ensures(Contract.Result<IEnumerable<string>>().Count() == Contract.OldValue(count));
-
-            var result = _ReadLines(reader, count);
-            Contract.Assume(result.All(s => s != null));
-            Contract.Assume(result.Count() == count);
-            return result;
-        }
-
-        private static IEnumerable<string> _ReadLines(this TextReader reader, int count) {
-            Contract.Requires(reader != null);
+            if (reader == null) throw new ArgumentNullException("reader");
             Contract.Ensures(Contract.Result<IEnumerable<string>>() != null);
 
             for (int i = 0; i < count; i++) {
@@ -131,7 +110,7 @@ namespace PaizaTemplate {
         /// <param name="reader"></param>
         /// <returns></returns>
         public static int ReadInt32(this TextReader reader) {
-            if (reader == null) throw new ArgumentNullException(nameof(reader));
+            if (reader == null) throw new ArgumentNullException("reader");
             Contract.EndContractBlock();
 
             var line = reader.ReadLine();
@@ -148,13 +127,13 @@ namespace PaizaTemplate {
         /// <param name="value"></param>
         /// <returns></returns>
         public static IReadOnlyCollection<string> SplitBySpace(this string value, int count) {
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException("value");
             Contract.Ensures(Contract.Result<IReadOnlyCollection<string>>() != null);
             Contract.Ensures(Contract.Result<IReadOnlyCollection<string>>().All(s => s != null));
             Contract.Ensures(Contract.Result<IReadOnlyCollection<string>>().Count == Contract.OldValue(count));
 
             IReadOnlyCollection<string> result = value.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-            if (result.Count != count) throw new ArgumentOutOfRangeException(nameof(value), value, null);
+            if (result.Count != count) throw new ArgumentOutOfRangeException("value", value, null);
             return result;
         }
 
@@ -164,7 +143,7 @@ namespace PaizaTemplate {
         /// <param name="value"></param>
         /// <returns></returns>
         public static int ToInt32(this string value) {
-            if (value == null) throw new ArgumentNullException(nameof(value));
+            if (value == null) throw new ArgumentNullException("value");
             Contract.EndContractBlock();
 
             return int.Parse(value, CultureInfo.CurrentCulture);
@@ -179,14 +158,10 @@ namespace PaizaTemplate {
         /// <param name="source"></param>
         /// <returns></returns>
         public static IEnumerable<int> ToInt32Enumerable(this IEnumerable<string> source) {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            Contract.Requires(source.All(s => s != null));
+            if (source == null) throw new ArgumentNullException("source");
             Contract.Ensures(Contract.Result<IEnumerable<int>>() != null);
-            Contract.Ensures(Contract.Result<IEnumerable<int>>().Count() == Contract.OldValue(source).Count());
 
-            var result = source.Select(s => s.ToInt32());
-            Contract.Assume(result.Count() == source.Count());
-            return result;
+            return source.Select(s => s.ToInt32());
         }
     }
 

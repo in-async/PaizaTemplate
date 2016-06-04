@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaizaTemplate", "PaizaTempl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaizaTemplate.Tests", "PaizaTemplate.Tests\PaizaTemplate.Tests.csproj", "{56C86190-AD58-44D7-8E24-BCA2DDC36ACB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaizaTemplate.CustomTests", "PaizaTemplate.CustomTests\PaizaTemplate.CustomTests.csproj", "{7354AAAC-FE78-4F2B-B89C-D313A7DDB86D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{56C86190-AD58-44D7-8E24-BCA2DDC36ACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{56C86190-AD58-44D7-8E24-BCA2DDC36ACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56C86190-AD58-44D7-8E24-BCA2DDC36ACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7354AAAC-FE78-4F2B-B89C-D313A7DDB86D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7354AAAC-FE78-4F2B-B89C-D313A7DDB86D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7354AAAC-FE78-4F2B-B89C-D313A7DDB86D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7354AAAC-FE78-4F2B-B89C-D313A7DDB86D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
